@@ -1,10 +1,10 @@
 from fastapi import HTTPException, status, Depends, APIRouter
-import models
+from .. import models
 from sqlalchemy.orm import Session
-from database import get_db 
+from .. import database 
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from utils import verify_password, hash
-from oauth2 import create_access_token
+from .. import utils
+from .. import oauth2
 
 
 router = APIRouter(
@@ -14,7 +14,7 @@ router = APIRouter(
 
 
 @router.post("/login")
-def login(user_credential : OAuth2PasswordRequestForm = Depends() ,db : Session = Depends(get_db)):
+def login(user_credential : OAuth2PasswordRequestForm = Depends() ,db : Session = Depends(database.get_db)):
     
     user = db.query(models.User).filter(models.User.name == user_credential.username).first()
 
@@ -41,6 +41,6 @@ def login(user_credential : OAuth2PasswordRequestForm = Depends() ,db : Session 
             detail= 'your password is false'
         )
     
-    access_token = create_access_token(data= {"user_id" : user.id})
+    access_token = oauth2.create_access_token(data= {"user_id" : user.id})
 
     return access_token

@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException, APIRouter, Depends, status
-from schemas import FilmModel, FilmResponse
+from ..schemas import FilmModel, FilmResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
-from database import get_db
-import models
+from .. import database
+from .. import models
 from random import choice
-from oauth2 import get_current_user
-from config import settings
+from ..oauth2 import get_current_user
+from .. import config
 
 
 router = APIRouter(
@@ -17,7 +17,7 @@ router = APIRouter(
 @router.post('/create_film',
             # response_model= FilmResponse
             )
-def create_film(film : FilmModel, owner_pass : str = None , db : Session = Depends(get_db)):
+def create_film(film : FilmModel, owner_pass : str = None , db : Session = Depends(database.get_db)):
     
     # if film.secret_key is not SECRET_KEY_FOR_ADD_AND_MODIFY:
     #     raise HTTPException(
@@ -31,7 +31,7 @@ def create_film(film : FilmModel, owner_pass : str = None , db : Session = Depen
             detail= 'you have to provide the owner password'
         )
 
-    if owner_pass != settings.owner_password :
+    if owner_pass != config.settings.owner_password :
         raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
             detail= 'the owner password is not correct'
@@ -52,7 +52,7 @@ def create_film(film : FilmModel, owner_pass : str = None , db : Session = Depen
 
 
 @router.delete('/delete_film/{id}')
-def delete_film(id : int, owner_pass : str = None ,db: Session = Depends(get_db)):
+def delete_film(id : int, owner_pass : str = None ,db: Session = Depends(database.get_db)):
 
     if owner_pass == None:
         raise HTTPException(
@@ -60,7 +60,7 @@ def delete_film(id : int, owner_pass : str = None ,db: Session = Depends(get_db)
             detail= 'you have to provide the owner password'
         )
 
-    if owner_pass != settings.owner_password :
+    if owner_pass != config.settings.owner_password :
         raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
             detail= 'the owner password is not correct'
@@ -85,7 +85,7 @@ def delete_film(id : int, owner_pass : str = None ,db: Session = Depends(get_db)
 
 
 @router.put("/update_film/{id}")
-def update_film(id : int,  updated_film : dict, owner_pass : str = None,db: Session = Depends(get_db)):
+def update_film(id : int,  updated_film : dict, owner_pass : str = None,db: Session = Depends(database.get_db)):
 
     if owner_pass == None:
         raise HTTPException(
@@ -93,7 +93,7 @@ def update_film(id : int,  updated_film : dict, owner_pass : str = None,db: Sess
             detail= 'you have to provide the owner password'
         )
 
-    if owner_pass != settings.owner_password :
+    if owner_pass != config.settings.owner_password :
         raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
             detail= 'the owner password is not correct'
@@ -125,7 +125,7 @@ def update_film(id : int,  updated_film : dict, owner_pass : str = None,db: Sess
 
 
 @router.get('/get_film_by_id/{id}')
-def get_film_by_id(id : int , owner_pass : str = None, db: Session = Depends(get_db)):
+def get_film_by_id(id : int , owner_pass : str = None, db: Session = Depends(database.get_db)):
 
     if owner_pass == None:
         raise HTTPException(
@@ -133,7 +133,7 @@ def get_film_by_id(id : int , owner_pass : str = None, db: Session = Depends(get
             detail= 'you have to provide the owner password'
         )
 
-    if owner_pass != settings.owner_password :
+    if owner_pass != config.settings.owner_password :
         raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
             detail= 'the owner password is not correct'
@@ -151,7 +151,7 @@ def get_film_by_id(id : int , owner_pass : str = None, db: Session = Depends(get
 
 
 @router.get('/get_all_films/')
-def get_all_film(owner_pass : str = None,db: Session = Depends(get_db)):
+def get_all_film(owner_pass : str = None,db: Session = Depends(database.get_db)):
 
     if owner_pass == None:
         raise HTTPException(
@@ -159,7 +159,7 @@ def get_all_film(owner_pass : str = None,db: Session = Depends(get_db)):
             detail= 'you have to provide the owner password'
         )
     
-    if owner_pass != settings.owner_password :
+    if owner_pass != config.settings.owner_password :
         raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
             detail= 'the owner password is not correct'
@@ -173,7 +173,7 @@ def get_all_film(owner_pass : str = None,db: Session = Depends(get_db)):
     return films
 
 @router.get('/get_limited_films/{limits}')
-def get_limited_films(owner_pass : str = None ,limits : int = 3, db:Session = Depends(get_db)):
+def get_limited_films(owner_pass : str = None ,limits : int = 3, db:Session = Depends(database.get_db)):
     
     if owner_pass == None:
         raise HTTPException(
@@ -181,7 +181,7 @@ def get_limited_films(owner_pass : str = None ,limits : int = 3, db:Session = De
             detail= 'you have to provide the owner password'
         )
     
-    if owner_pass != settings.owner_password :
+    if owner_pass != config.settings.owner_password :
         raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
             detail= 'the owner password is not correct'
@@ -193,7 +193,7 @@ def get_limited_films(owner_pass : str = None ,limits : int = 3, db:Session = De
 
 
 @router.get('/get_film_by_search/{search}')
-def get_film_by_search(search : str , owner_pass : str = None, db : Session = Depends(get_db)):
+def get_film_by_search(search : str , owner_pass : str = None, db : Session = Depends(database.get_db)):
 
     if owner_pass == None:
         raise HTTPException(
@@ -201,7 +201,7 @@ def get_film_by_search(search : str , owner_pass : str = None, db : Session = De
             detail= 'you have to provide the owner password'
         )
     
-    if owner_pass != settings.owner_password :
+    if owner_pass != config.settings.owner_password :
         raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
             detail= 'the owner password is not correct'
@@ -213,7 +213,7 @@ def get_film_by_search(search : str , owner_pass : str = None, db : Session = De
 
 
 @router.get('/get_random_film')
-def get_random_film(db: Session = Depends(get_db), current_user : int = Depends(get_current_user)):
+def get_random_film(db: Session = Depends(database.get_db), current_user : int = Depends(get_current_user)):
     
     # print(current_user.id)
     print(current_user.shown_films)

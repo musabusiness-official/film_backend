@@ -1,11 +1,11 @@
-from database import Base
+from . import database
 from sqlalchemy import Column, String , Integer,ForeignKey, Boolean
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql.expression import text
 from sqlalchemy.orm import relationship
 
-class User(Base):
+class User(database.Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False, unique=True)
@@ -17,7 +17,7 @@ class User(Base):
     
 
 
-class BloodyFilm(Base):
+class BloodyFilm(database.Base):
     __tablename__ = 'bloodyfilms'
     id = Column(Integer, primary_key=True)
     type = Column(String, server_default = 'blood video')

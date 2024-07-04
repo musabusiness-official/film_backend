@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from routers import film, auth, user
-import models
-from database import engine
+from .routers import film, auth, user
+from . import models
+from . import database
 
 
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=database.engine)
 
 
 app = FastAPI()
