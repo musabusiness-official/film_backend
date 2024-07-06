@@ -5,12 +5,13 @@ from sqlalchemy import pool
 
 from alembic import context
 from fast_api.database import Base
+from fast_api.config import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 config.set_main_option(
-    'sqlalchemy.url', f"postgresql://{config.settings.database_username}:{config.settings.database_password}@{config.settings.database_hostname}:{config.settings.database_port}/{config.settings.database_name}" 
+    'sqlalchemy.url', f"postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}" 
 )
 
 # Interpret the config file for Python logging.
