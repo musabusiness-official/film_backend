@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from . import config
 
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://{config.settings.database_username}:{config.settings.database_password}@{config.settings.database_hostname}/{config.settings.database_name}"
+SQLALCHEMY_DATABASE_URL = f"postgresql://{config.settings.database_username}:{config.settings.database_password}@{config.settings.database_hostname}:{config.settings.database_port}/{config.settings.database_name}"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 #                           "postgresql://postgres:rasedpopo1239$@localhost/fastapi"
 
