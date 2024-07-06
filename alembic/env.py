@@ -10,7 +10,7 @@ from fast_api.database import Base
 # access to the values within the .ini file in use.
 config = context.config
 config.set_main_option(
-    'sqlalchemy.url', "postgresql://postgres:rasedpopo1239$@localhost/fastapi" 
+    'sqlalchemy.url', f"postgresql://{config.settings.database_username}:{config.settings.database_password}@{config.settings.database_hostname}:{config.settings.database_port}/{config.settings.database_name}" 
 )
 
 # Interpret the config file for Python logging.
