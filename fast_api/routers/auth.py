@@ -43,4 +43,9 @@ def login(user_credential : OAuth2PasswordRequestForm = Depends() ,db : Session 
     
     access_token = oauth2.create_access_token(data= {"user_id" : user.id})
 
-    return access_token
+    user_data = db.query(models.User).filter(models.User.name == user_credential.username).first()
+
+    return {
+        "token" : access_token,
+        "user_data" : user_data
+    }
